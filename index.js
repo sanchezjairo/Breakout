@@ -11,6 +11,7 @@ const paddleWidth = 75;
 const paddleX = (canvas.width - paddleWidth) / 2;
 const rightPressed = false;
 const leftPressed = false;
+const interval = setInterval(draw, 10);
 
 function drawBall() {
   ctx.beginPath();
@@ -37,8 +38,16 @@ function draw() {
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
-  if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+  if (y + dy < ballRadius) {
     dy = -dy;
+  } else if (y + dy > canvas.height - ballRadius) {
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy;
+    }
+    // eslint-disable-next-line no-alert
+    alert('GAME OVER');
+    document.location.reload();
+    clearInterval(interval);
   }
   x += dx;
   y += dy;
@@ -73,4 +82,3 @@ function keyUpHandler(e) {
     leftPressed = false;
   }
 }
-setInterval(draw, 10);
