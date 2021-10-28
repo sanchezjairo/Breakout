@@ -11,6 +11,7 @@ const paddleWidth = 75;
 const paddleX = (canvas.width - paddleWidth) / 2;
 const rightPressed = false;
 const leftPressed = false;
+// eslint-disable-next-line no-use-before-define
 const interval = setInterval(draw, 10);
 const brickRowCount = 3;
 const brickColumnCount = 5;
@@ -19,6 +20,7 @@ const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
+const score = 0;
 
 const bricks = [];
 // eslint-disable-next-line no-plusplus
@@ -72,7 +74,10 @@ function draw() {
   drawBricks();
   drawBall();
   drawPaddle();
-  collisionDetection()
+  // eslint-disable-next-line no-use-before-define
+  drawScore();
+  // eslint-disable-next-line no-use-before-define
+  collisionDetection();
   // eslint-disable-next-line no-const-assign
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
@@ -131,9 +136,23 @@ function collisionDetection() {
       if (b.status === 1) {
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
-          b.status = 0;
+          // eslint-disable-next-line no-plusplus
+          b.status = 0; score++;
+          if (score === brickRowCount * brickColumnCount) {
+            // eslint-disable-next-line no-alert
+            alert('YOU WIN, CONGRATULATIONS!');
+            document.location.reload();
+            clearInterval(interval);
+          }
         }
       }
     }
   }
+}
+
+function drawScore() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#0095DD';
+  // eslint-disable-next-line prefer-template
+  ctx.fillText('Score: ' + score, 8, 20);
 }
