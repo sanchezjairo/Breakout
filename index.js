@@ -12,6 +12,23 @@ const paddleX = (canvas.width - paddleWidth) / 2;
 const rightPressed = false;
 const leftPressed = false;
 const interval = setInterval(draw, 10);
+const brickRowCount = 3;
+const brickColumnCount = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+
+const bricks = [];
+// eslint-disable-next-line no-plusplus
+for (const c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  // eslint-disable-next-line no-plusplus
+  for (const r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0 };
+  }
+}
 
 function drawBall() {
   ctx.beginPath();
@@ -29,9 +46,28 @@ function drawPaddle() {
   ctx.closePath();
 }
 
+function drawBricks() {
+  // eslint-disable-next-line no-plusplus
+  for (const c = 0; c < brickColumnCount; c++) {
+    // eslint-disable-next-line no-plusplus
+    for (const r = 0; r < brickRowCount; r++) {
+      const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+      const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+      bricks[c][r].x = brickX;
+      bricks[c][r].y = brickY;
+      ctx.beginPath();
+      ctx.rect(0, 0, brickWidth, brickHeight);
+      ctx.fillStyle = '#0095DD';
+      ctx.fill();
+      ctx.closePath();
+    }
+  }
+}
+
 function draw() {
   // drawing code
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBricks();
   drawBall();
   drawPaddle();
   // eslint-disable-next-line no-const-assign
