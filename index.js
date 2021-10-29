@@ -12,7 +12,7 @@ const paddleX = (canvas.width - paddleWidth) / 2;
 const rightPressed = false;
 const leftPressed = false;
 // eslint-disable-next-line no-use-before-define
-const interval = setInterval(draw, 10);
+draw();
 const brickRowCount = 3;
 const brickColumnCount = 5;
 const brickWidth = 75;
@@ -21,6 +21,8 @@ const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 const score = 0;
+// eslint-disable-next-line no-unused-vars
+const lives = 3;
 
 const bricks = [];
 // eslint-disable-next-line no-plusplus
@@ -53,7 +55,7 @@ function drawBricks() {
   for (const c = 0; c < brickColumnCount; c++) {
     // eslint-disable-next-line no-plusplus
     for (const r = 0; r < brickRowCount; r++) {
-      if (bricks[c][r].status === 1 ) {
+      if (bricks[c][r].status === 1) {
         const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
         const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
         bricks[c][r].x = brickX;
@@ -77,6 +79,8 @@ function draw() {
   // eslint-disable-next-line no-use-before-define
   drawScore();
   // eslint-disable-next-line no-use-before-define
+  drawLives();
+  // eslint-disable-next-line no-use-before-define
   collisionDetection();
   // eslint-disable-next-line no-const-assign
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
@@ -89,9 +93,19 @@ function draw() {
       dy = -dy;
     }
     // eslint-disable-next-line no-alert
-    alert('GAME OVER');
-    document.location.reload();
-    clearInterval(interval);
+    // eslint-disable-next-line no-plusplus
+    lives--;
+    if (!lives) {
+      // eslint-disable-next-line no-alert
+      alert('GAME OVER');
+      document.location.reload();
+    } else {
+      x = canvas.width / 2;
+      y = canvas.height - 30;
+      dx = 2;
+      dy = -2;
+      paddleX = (canvas.width - paddleWidth) / 2;
+    }
   }
   x += dx;
   y += dy;
@@ -108,8 +122,12 @@ function draw() {
     }
   }
 }
+// eslint-disable-next-line no-use-before-define
 document.addEventListener('keydown', keyDownHandler, false);
+// eslint-disable-next-line no-use-before-define
 document.addEventListener('keyup', keyUpHandler, false);
+// eslint-disable-next-line no-use-before-define
+document.addEventListener('mousemove', mouseMoveHandler, false);
 
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
@@ -124,6 +142,13 @@ function keyUpHandler(e) {
     rightPressed = false;
   } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
     leftPressed = false;
+  }
+}
+
+function mouseMoveHandler(e) {
+  const relativeX = e.clientX - canvas.offsetLeft;
+  if (relativeX > 0 && relativeX < canvas.width) {
+    paddleX = relativeX - paddleWidth / 2;
   }
 }
 
@@ -142,7 +167,6 @@ function collisionDetection() {
             // eslint-disable-next-line no-alert
             alert('YOU WIN, CONGRATULATIONS!');
             document.location.reload();
-            clearInterval(interval);
           }
         }
       }
@@ -155,4 +179,12 @@ function drawScore() {
   ctx.fillStyle = '#0095DD';
   // eslint-disable-next-line prefer-template
   ctx.fillText('Score: ' + score, 8, 20);
+}
+
+// eslint-disable-next-line no-unused-vars
+function drawLives() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#0095DD';
+  // eslint-disable-next-line prefer-template
+  ctx.fillText('Lives: ' + lives, canvas.width - 65, 20);
 }
